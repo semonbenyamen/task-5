@@ -1,16 +1,16 @@
 //first step
 require("dotenv").config();
 const express = require("express");
+const app = express();
+app.use(express.json());
 const mongoose = require("mongoose");
 
-const app = express();
-const Product = require("./models/Product");
-app.use(express.json());
+const Classroom = require("./models/Classroom");
+const Student = require("./models/Student");
 
-const mongo_url = process.env.DB_URL;
 async function dbconnection() {
     try {
-        await mongoose.connect(mongo_url);
+        await mongoose.connect("mongodb://127.0.0.1:27017/firstApp");
         console.log("MongoDB connected successfully");
     } catch (err) {
         console.error("MongoDB connection error:", err);
@@ -19,42 +19,47 @@ async function dbconnection() {
 dbconnection();
 
 
-app.post("/api/products", async (req, res) => {
-    try {
-        const { productName, price, Quantity, createdBy } = req.body;
+app.post("/api/students", async (req, res) => {
+  try {
+    const student = await Student.create(req.body);
 
-        const newProduct = await Product.create({
-            productName,
-            price,
-            Quantity,
-            createdBy 
-        });
+    res.json({
+      success: true,
+      data: student,
+    });
+  } catch (error) {
+    res.json({ error: error });
+  }
+});
 
-        res.status(201).json({ success: true, data: newProduct });
-    } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
-    }
+app.post("/api/classrooms", async (req, res) => {
+  try {
+    const classroom = await Classroom.create(req.body);
+
+    res.json({
+      success: true,
+      data: classroom,
+    });
+  } catch (error) {
+    res.json({ error: error });
+  }
 });
 
 
-const port = process.env.PORT || 3000;
+app.get("/api/classrooms", async (req, res) => {
+  try {
+    const classrooms = await Classroom.find()
+      .populate("students");
 
-app.listen(port, () => {
-    console.log("Server is running");
+    res.json({
+      success: true,
+      data: classrooms,
+    });
+  } catch (error) {
+    res.json({ error: error });
+  }
 });
 
-app.get("/api/products", async (req, res) => {
-    try {
-        const products = await Product.find().populate("createdBy", "username email");
-
-        res.json({
-            success: true,
-            data: products
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
 
 const POET = process.env.PORT || 3000;
 
