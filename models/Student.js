@@ -10,6 +10,7 @@ const StudentSchema = new mongoose.Schema({
       type: String,
        required: true,
        unique: true,
+       trim: true,
        lowercase: true,
     },
   age: {
@@ -21,5 +22,5 @@ const StudentSchema = new mongoose.Schema({
       ref: "Classroom",
   }, { timestamps: true });
 
-module.exports  = mongoose.model("Student", StudentSchema);
+module.exports = mongoose.model("Student", StudentSchema);
 
