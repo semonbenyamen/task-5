@@ -56,7 +56,7 @@ app.get("/api/classrooms", async (req, res) => {
       data: classrooms,
     });
   } catch (error) {
-    res.json({ error: error });
+   console.log(error);
   }
 });
 
