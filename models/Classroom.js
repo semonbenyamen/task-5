@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
 
 const ClassroomSchema = new mongoose.Schema({
-    productName: { type: String, required: true },
-    price: { type: Number, required: true },
-    Quantity: { type: Number, required: true },
+  name: {
+    type: String,
+    required: true,
+  },
+  students: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student",
+    },
+  ],
+});
 
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "User",
-        required: true,
-    }
-}, { timestamps: true });
-
-module.exports = mongoose.model("Classroom", classroomSchema);
+module.exports = mongoose.model("Classroom", ClassroomSchema);
